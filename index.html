@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tsuzuku">
+<meta name="theme-color" content="#1e1e2e">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>Tsuzuku</title>
+<style>
+/* ---------------------------------------------------------------- Catppuccin */
+:root, :root[data-flavor="latte"] {
+  color-scheme: light;
+  --base: #eff1f5; --mantle: #e6e9ef; --crust: #dce0e8;
+  --text: #4c4f69; --subtext1: #5c5f77; --subtext0: #6c6f85;
+  --overlay2: #7c7f93; --overlay1: #8c8fa1; --overlay0: #9ca0b0;
+  --surface2: #acb0be; --surface1: #bcc0cc; --surface0: #ccd0da;
+  --rosewater: #dc8a78; --flamingo: #dd7878; --pink: #ea76cb; --mauve: #8839ef; --red: #d20f39; --maroon: #e64553; --peach: #fe640b;
+  --yellow: #df8e1d; --green: #40a02b; --teal: #179299; --sky: #04a5e5; --sapphire: #209fb5; --blue: #1e66f5; --lavender: #7287fd;
+  --card: #e6e9ef; --empty: #dce0e8; --on-accent: #eff1f5; --tint: 32%;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-flavor]) {
+    color-scheme: dark;
+    --base: #1e1e2e; --mantle: #181825; --crust: #11111b;
+    --text: #cdd6f4; --subtext1: #bac2de; --subtext0: #a6adc8;
+    --overlay2: #9399b2; --overlay1: #7f849c; --overlay0: #6c7086;
+    --surface2: #585b70; --surface1: #45475a; --surface0: #313244;
+    --rosewater: #f5e0dc; --flamingo: #f2cdcd; --pink: #f5c2e7; --mauve: #cba6f7; --red: #f38ba8; --maroon: #eba0ac; --peach: #fab387;
+    --yellow: #f9e2af; --green: #a6e3a1; --teal: #94e2d5; --sky: #89dceb; --sapphire: #74c7ec; --blue: #89b4fa; --lavender: #b4befe;
+    --card: #181825; --empty: #313244; --on-accent: #11111b; --tint: 28%;
+  }
+}
+:root[data-flavor="mocha"] {
+  color-scheme: dark;
+  --base: #1e1e2e; --mantle: #181825; --crust: #11111b;
+  --text: #cdd6f4; --subtext1: #bac2de; --subtext0: #a6adc8;
+  --overlay2: #9399b2; --overlay1: #7f849c; --overlay0: #6c7086;
+  --surface2: #585b70; --surface1: #45475a; --surface0: #313244;
+  --rosewater: #f5e0dc; --flamingo: #f2cdcd; --pink: #f5c2e7; --mauve: #cba6f7; --red: #f38ba8; --maroon: #eba0ac; --peach: #fab387;
+  --yellow: #f9e2af; --green: #a6e3a1; --teal: #94e2d5; --sky: #89dceb; --sapphire: #74c7ec; --blue: #89b4fa; --lavender: #b4befe;
+  --card: #181825; --empty: #313244; --on-accent: #11111b; --tint: 28%;
+}
+:root[data-flavor="macchiato"] {
+  color-scheme: dark;
+  --base: #24273a; --mantle: #1e2030; --crust: #181926;
+  --text: #cad3f5; --subtext1: #b8c0e0; --subtext0: #a5adcb;
+  --overlay2: #939ab7; --overlay1: #8087a2; --overlay0: #6e738d;
+  --surface2: #5b6078; --surface1: #494d64; --surface0: #363a4f;
+  --rosewater: #f4dbd6; --flamingo: #f0c6c6; --pink: #f5bde6; --mauve: #c6a0f6; --red: #ed8796; --maroon: #ee99a0; --peach: #f5a97f;
+  --yellow: #eed49f; --green: #a6da95; --teal: #8bd5ca; --sky: #91d7e3; --sapphire: #7dc4e4; --blue: #8aadf4; --lavender: #b7bdf8;
+  --card: #1e2030; --empty: #363a4f; --on-accent: #181926; --tint: 28%;
+}
+:root[data-flavor="frappe"] {
+  color-scheme: dark;
+  --base: #303446; --mantle: #292c3c; --crust: #232634;
+  --text: #c6d0f5; --subtext1: #b5bfe2; --subtext0: #a5adce;
+  --overlay2: #949cbb; --overlay1: #838ba7; --overlay0: #737994;
+  --surface2: #626880; --surface1: #51576d; --surface0: #414559;
+  --rosewater: #f2d5cf; --flamingo: #eebebe; --pink: #f4b8e4; --mauve: #ca9ee6; --red: #e78284; --maroon: #ea999c; --peach: #ef9f76;
+  --yellow: #e5c890; --green: #a6d189; --teal: #81c8be; --sky: #99d1db; --sapphire: #85c1dc; --blue: #8caaee; --lavender: #babbf1;
+  --card: #292c3c; --empty: #414559; --on-accent: #232634; --tint: 30%;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; }
+body {
+  background: var(--base); color: var(--text);
+  font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+.muted { color: var(--overlay1); }
+.sub { color: var(--subtext0); }
+
+header.bar { position: sticky; top: 0; z-index: 5; background: var(--base); padding: max(12px, env(safe-area-inset-top)) 16px 10px; }
+header.bar .in { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+header.bar h1 { flex: 1; margin: 0; font-size: 20px; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+header.bar h1 .jp { color: var(--mauve); font-weight: 500; margin-left: 4px; }
+main { max-width: 720px; margin: 0 auto; padding: 4px 16px 90px; }
+.iconbtn { border: 0; background: var(--surface0); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; }
+.iconbtn svg { width: 18px; height: 18px; }
+.btn { border: 0; background: var(--surface0); border-radius: 10px; padding: 10px 16px; }
+.btn.primary { background: var(--mauve); color: var(--on-accent); font-weight: 600; }
+.btn.danger { color: var(--red); }
+.btn.armed { background: var(--red); color: var(--on-accent); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--overlay1); margin: 24px 0 10px; font-weight: 650; }
+.date { color: var(--subtext0); margin: 0 0 14px; }
+
+/* habit cards */
+.habits { display: grid; gap: 12px; }
+.habit { background: var(--card); border-radius: 16px; padding: 14px; --c: var(--mauve); }
+.habit .top { display: flex; gap: 12px; align-items: center; }
+.emoji { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;
+  background: color-mix(in srgb, var(--c) 22%, transparent); flex: none; }
+.habit .names { flex: 1; min-width: 0; cursor: pointer; }
+.habit .name { font-weight: 650; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.habit .sched { font-size: 13px; color: var(--subtext0); }
+.status { font-size: 13px; margin-top: 2px; }
+.status .s { color: var(--c); font-weight: 650; }
+.check { width: 46px; height: 46px; border-radius: 14px; border: 2px solid color-mix(in srgb, var(--c) 55%, transparent);
+  background: transparent; display: flex; align-items: center; justify-content: center; flex: none; transition: transform 0.12s; }
+.check svg { width: 22px; height: 22px; color: var(--c); }
+.check.on { background: var(--c); border-color: var(--c); }
+.check.on svg { color: var(--on-accent); }
+.check:active { transform: scale(0.92); }
+.heatwrap { margin-top: 12px; overflow: hidden; cursor: pointer; }
+
+/* heatmap */
+.heat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, var(--cell)); grid-auto-columns: var(--cell); gap: var(--gap); }
+.heat i { display: block; border-radius: 3px; background: var(--empty); }
+.heat i.cv { background: color-mix(in srgb, var(--c) var(--tint), var(--empty)); }
+.heat i.d { background: var(--c); }
+.heat i.pl { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 70%, transparent); }
+.heat i.td { box-shadow: inset 0 0 0 1.5px var(--text); }
+.heat i.fut { background: transparent; }
+.months { display: grid; grid-auto-flow: column; grid-auto-columns: var(--cell); gap: var(--gap); font-size: 10px; color: var(--overlay1); height: 15px; }
+.months span { white-space: nowrap; }
+.yearscroll { overflow-x: auto; padding-bottom: 6px; }
+
+/* empty state */
+.empty { text-align: center; padding: 30px 10px; color: var(--subtext0); }
+.templates { display: grid; gap: 8px; margin-top: 14px; }
+.tpl { display: flex; gap: 12px; align-items: center; background: var(--card); border: 0; border-radius: 14px; padding: 10px 12px; text-align: left; }
+
+/* detail */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (max-width: 520px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--card); border-radius: 14px; padding: 10px 12px; }
+.stat b { display: block; font-size: 24px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12px; color: var(--subtext0); }
+.panel { background: var(--card); border-radius: 16px; padding: 14px; }
+.cal-head { max-width: 420px; margin-left: auto; margin-right: auto; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-head b { font-size: 16px; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; max-width: 420px; margin: 0 auto; }
+.cal .wd { text-align: center; font-size: 11px; color: var(--overlay1); }
+.cal button { aspect-ratio: 1; border: 0; border-radius: 10px; background: var(--empty); font-size: 14px; font-variant-numeric: tabular-nums; }
+.cal button.cv { background: color-mix(in srgb, var(--c) var(--tint), var(--empty)); }
+.cal button.d { background: var(--c); color: var(--on-accent); font-weight: 650; }
+.cal button.pl { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c) 70%, transparent); }
+.cal button.td { outline: 2px solid var(--text); outline-offset: 1px; }
+.cal button:disabled { opacity: 0.35; cursor: default; }
+.cal .pad { visibility: hidden; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--subtext0); margin-top: 10px; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+/* form */
+.field { margin-bottom: 18px; }
+.field > label, .flabel { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--overlay1); margin-bottom: 6px; font-weight: 650; }
+input[type=text], input[type=date], input[type=number] {
+  width: 100%; background: var(--card); border: 2px solid transparent; border-radius: 12px; padding: 11px 12px; outline: none; font-size: 16px;
+}
+input:focus { border-color: var(--mauve); }
+input[type=number] { width: 72px; text-align: center; }
+.swatches { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; max-width: 360px; }
+.swatches button { aspect-ratio: 1; border-radius: 50%; border: 0; }
+.swatches button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--base), 0 0 0 5px var(--text); }
+.emojis { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.emojis button { border: 0; background: var(--card); border-radius: 10px; width: 40px; height: 40px; font-size: 20px; }
+.seg { display: inline-flex; background: var(--card); border-radius: 12px; padding: 3px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; border-radius: 9px; padding: 7px 12px; }
+.seg button[aria-pressed="true"] { background: var(--surface0); font-weight: 650; }
+.days { display: flex; gap: 6px; flex-wrap: wrap; }
+.days button { width: 42px; height: 38px; border: 0; border-radius: 10px; background: var(--card); font-size: 13px; }
+.days button[aria-pressed="true"] { background: var(--mauve); color: var(--on-accent); font-weight: 650; }
+.sentence { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 10px 0; }
+.hint { font-size: 13px; color: var(--subtext0); background: var(--card); border-radius: 12px; padding: 10px 12px; }
+.preview { font-weight: 650; color: var(--mauve); }
+.list { background: var(--card); border-radius: 14px; }
+.list .item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.list .item + .item { border-top: 1px solid var(--surface0); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: max(22px, env(safe-area-inset-bottom)); background: var(--text); color: var(--base);
+  padding: 10px 16px; border-radius: 12px; z-index: 30; font-size: 14px; }
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <button class="iconbtn hidden" id="back" aria-label="Back"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3 5 8l5 5"/></svg></button>
+  <h1 id="title"></h1>
+  <button class="iconbtn" id="addbtn" aria-label="New habit"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button>
+  <button class="iconbtn" id="setbtn" aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 4h7M12 4h2M2 12h2M7 12h7M9 2.5v3M5 10.5v3"/></svg></button>
+</div></header>
+<main id="view"></main>
+
+<script>
+'use strict';
+// ================================================================ dates (whole days, timezone-safe)
+const DAY = 86400000;
+const dayOf = (y, m, d) => Date.UTC(y, m, d) / DAY;
+const todayN = () => { const d = new Date(); return dayOf(d.getFullYear(), d.getMonth(), d.getDate()); };
+const keyN = n => new Date(n * DAY).toISOString().slice(0, 10);
+const nKey = k => { const [y, m, d] = k.split('-').map(Number); return dayOf(y, m - 1, d); };
+const wd = n => (new Date(n * DAY).getUTCDay() + 6) % 7;            // Monday = 0
+const weekStart = n => n - wd(n);
+const monthIdx = n => { const d = new Date(n * DAY); return d.getUTCFullYear() * 12 + d.getUTCMonth(); };
+const monthStart = mi => dayOf(Math.floor(mi / 12), mi % 12, 1);
+const WD = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const fmtDate = (n, opts = { weekday: 'short', day: 'numeric', month: 'short' }) => new Date(n * DAY).toLocaleDateString(undefined, { ...opts, timeZone: 'UTC' });
+
+// ================================================================ state
+const ACCENTS = ['rosewater', 'flamingo', 'pink', 'mauve', 'red', 'maroon', 'peach', 'yellow', 'green', 'teal', 'sky', 'sapphire', 'blue', 'lavender'];
+const KEY = 'tsuzuku.v1';
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; } };
+let state = load() || { habits: [], done: {}, settings: { flavor: 'auto' } };
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
+const uid = () => Math.random().toString(36).slice(2, 10);
+const habit = id => state.habits.find(h => h.id === id);
+const doneSet = h => (state.done[h.id] = state.done[h.id] || {});
+const isDone = (h, n) => !!doneSet(h)[keyN(n)];
+function toggle(h, n) {
+  const s = doneSet(h), k = keyN(n);
+  if (s[k]) delete s[k]; else s[k] = 1;
+  save();
+}
+
+function applyFlavor() {
+  const f = state.settings.flavor;
+  if (f === 'auto') document.documentElement.removeAttribute('data-flavor');
+  else document.documentElement.setAttribute('data-flavor', f);
+  const meta = document.querySelector('meta[name=theme-color]');
+  meta.content = getComputedStyle(document.documentElement).getPropertyValue('--base').trim() || '#1e1e2e';
+}
+applyFlavor();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyFlavor);
+
+// ================================================================ schedules
+// gap:    { kind: 'gap', n }                                      every n days; streak holds while no gap exceeds n days
+// period: { kind: 'period', unit: 'week'|'month', every, times, days: [0..6] }
+//         `times` completions per block of `every` weeks/months, blocks anchored at the habit's start date
+function describe(s) {
+  if (s.kind === 'gap') return s.n === 1 ? 'Every day' : s.n === 2 ? 'Every other day' : `Every ${s.n} days`;
+  const unit = s.unit === 'week' ? 'week' : 'month';
+  const per = s.every === 1 ? `per ${unit}` : `every ${s.every} ${unit}s`;
+  if (s.unit === 'week' && s.days && s.days.length && s.times === s.days.length) {
+    const names = s.days.slice().sort().map(d => WD[d]).join(', ');
+    return s.every === 1 ? names : `${names} · every ${s.every} weeks`;
+  }
+  if (s.times === 1) return s.every === 1 ? `Once ${per}` : `Every ${s.every} ${unit}s`;
+  return `${s.times}× ${per}`;
+}
+
+function block(h, n) {
+  const s = h.schedule, start = nKey(h.start);
+  if (s.unit === 'week') {
+    const a = weekStart(start);
+    const idx = Math.floor((weekStart(n) - a) / 7 / s.every);
+    const from = a + idx * s.every * 7;
+    return { idx, from, to: from + s.every * 7 - 1 };
+  }
+  const am = monthIdx(start);
+  const idx = Math.floor((monthIdx(n) - am) / s.every);
+  return { idx, from: monthStart(am + idx * s.every), to: monthStart(am + (idx + 1) * s.every) - 1 };
+}
+function isPlanned(h, n) {
+  const s = h.schedule;
+  if (s.kind !== 'period' || s.unit !== 'week' || !s.days || !s.days.length || n < nKey(h.start)) return false;
+  if (!s.days.includes(wd(n))) return false;
+  return weekStart(n) === block(h, n).from;   // planned days fall in the first week of each block
+}
+
+// Everything the UI needs about one habit, computed from its completions.
+function analyze(h) {
+  const t = todayN(), s = h.schedule;
+  const days = Object.keys(doneSet(h)).map(nKey).sort((a, b) => a - b);
+  const covered = new Set();
+  const r = { days, total: days.length, covered, current: 0, best: 0, unit: 'day', status: '', due: false, doneToday: isDone(h, t) };
+  const last30 = days.filter(d => d > t - 30 && d <= t).length;
+  r.last30 = last30;
+
+  if (s.kind === 'gap') {
+    r.unit = s.n === 1 ? 'day' : 'session';
+    let chain = 0, prev = null;
+    for (const d of days) {
+      chain = prev != null && d - prev <= s.n ? chain + 1 : 1;
+      if (prev != null && d - prev <= s.n) for (let x = prev + 1; x < d; x++) covered.add(x);
+      r.best = Math.max(r.best, chain); prev = d;
+    }
+    const last = days.length ? days[days.length - 1] : null;
+    if (last != null) for (let x = last + 1; x < last + s.n && x <= t; x++) covered.add(x);
+    r.current = last != null && t - last <= s.n ? chain : 0;
+    if (r.doneToday) r.status = 'Done today';
+    else if (last == null) { r.status = 'Start today'; r.due = true; }
+    else {
+      const since = t - last;
+      if (since < s.n) r.status = since === s.n - 1 ? 'Due tomorrow' : `Next in ${s.n - since} days`;
+      else if (since === s.n) { r.status = 'Due today'; r.due = true; }
+      else { r.status = `Overdue · last ${since} days ago`; r.due = true; }
+    }
+    return r;
+  }
+
+  // period habits
+  r.unit = s.every === 1 ? s.unit : 'period';
+  const counts = new Map();
+  for (const d of days) { const b = block(h, d).idx; counts.set(b, (counts.get(b) || 0) + 1); }
+  const met = i => (counts.get(i) || 0) >= s.times;
+  const cur = block(h, t);
+  let i = met(cur.idx) ? cur.idx : cur.idx - 1;
+  while (met(i)) { r.current++; i--; }
+  const first = days.length ? block(h, days[0]).idx : cur.idx;
+  let run = 0;
+  for (let b = first; b <= cur.idx; b++) { run = met(b) ? run + 1 : 0; r.best = Math.max(r.best, run); }
+  for (const b of counts.keys()) if (met(b)) {
+    const range = blockRange(h, b);
+    for (let x = range.from; x <= Math.min(range.to, t); x++) covered.add(x);
+  }
+  const c = counts.get(cur.idx) || 0;
+  const span = s.every === 1 ? `this ${s.unit}` : `until ${fmtDate(cur.to, { weekday: 'short', day: 'numeric', month: 'short' })}`;
+  if (c >= s.times) r.status = `Done ${s.every === 1 ? 'for this ' + s.unit : 'for this period'} ✓`;
+  else {
+    r.due = true;
+    r.status = (isPlanned(h, t) && !r.doneToday ? 'Planned today · ' : '') + `${c}/${s.times} ${span}`;
+  }
+  return r;
+}
+function blockRange(h, idx) {
+  const s = h.schedule, start = nKey(h.start);
+  if (s.unit === 'week') { const from = weekStart(start) + idx * s.every * 7; return { from, to: from + s.every * 7 - 1 }; }
+  const am = monthIdx(start);
+  return { from: monthStart(am + idx * s.every), to: monthStart(am + (idx + 1) * s.every) - 1 };
+}
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+
+// ================================================================ heatmap
+function heatHTML(h, a, weeks, cell, gap, { months = false } = {}) {
+  const t = todayN(), endW = weekStart(t), startW = endW - (weeks - 1) * 7;
+  const set = doneSet(h);
+  let cells = '', labels = '';
+  for (let w = 0; w < weeks; w++) {
+    const ws = startW + w * 7;
+    if (months) {
+      const d = new Date(ws * DAY), prevMonth = new Date((ws - 7) * DAY).getUTCMonth();
+      labels += `<span>${w === 0 || d.getUTCMonth() !== prevMonth ? d.toLocaleDateString(undefined, { month: 'short', timeZone: 'UTC' }) : ''}</span>`;
+    }
+    for (let i = 0; i < 7; i++) {
+      const n = ws + i;
+      let cls = n > t ? 'fut' : set[keyN(n)] ? 'd' : a.covered.has(n) ? 'cv' : '';
+      if (n <= t && !set[keyN(n)] && isPlanned(h, n)) cls += ' pl';
+      if (n === t) cls += ' td';
+      cells += `<i class="${cls}"></i>`;
+    }
+  }
+  const style = `--cell:${cell}px;--gap:${gap}px`;
+  return (months ? `<div class="months" style="${style}">${labels}</div>` : '') + `<div class="heat" style="${style}">${cells}</div>`;
+}
+
+// ================================================================ UI plumbing
+const view = document.getElementById('view');
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(e => e.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+function header(title, back) {
+  $('#title').innerHTML = title;
+  $('#back').classList.toggle('hidden', !back);
+  $('#addbtn').classList.toggle('hidden', back);
+  $('#setbtn').classList.toggle('hidden', back);
+}
+$('#back').onclick = () => { location.hash = '#/'; };
+$('#addbtn').onclick = () => { location.hash = '#/new'; };
+$('#setbtn').onclick = () => { location.hash = '#/settings'; };
+const route = () => { const [name, arg] = location.hash.replace(/^#\/?/, '').split('/'); return { name: name || 'home', arg }; };
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+window.addEventListener('resize', () => { if (route().name === 'home') render(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });   // new day when reopened
+function render() {
+  const r = route();
+  if (r.name === 'h' && habit(r.arg)) return renderDetail(habit(r.arg));
+  if (r.name === 'edit' && habit(r.arg)) return renderEdit(habit(r.arg));
+  if (r.name === 'new') return renderEdit(null);
+  if (r.name === 'settings') return renderSettings();
+  return renderHome();
+}
+
+// ================================================================ home
+const TEMPLATES = [
+  { name: 'Japanese', emoji: '🇯🇵', color: 'mauve', schedule: { kind: 'gap', n: 1 } },
+  { name: 'Kettlebell', emoji: '🏋️', color: 'peach', schedule: { kind: 'gap', n: 2 } },
+  { name: 'Long run', emoji: '🏃', color: 'green', schedule: { kind: 'period', unit: 'week', every: 1, times: 1, days: [] } },
+  { name: 'Clean the bikes', emoji: '🚲', color: 'sapphire', schedule: { kind: 'period', unit: 'week', every: 2, times: 1, days: [] } },
+];
+function createHabit(t) {
+  const h = { id: uid(), name: t.name, emoji: t.emoji, color: t.color, schedule: structuredClone(t.schedule), start: keyN(todayN()), archived: false };
+  state.habits.push(h); save(); return h;
+}
+
+function renderHome() {
+  header('Tsuzuku<span class="jp">続く</span>', false);
+  const list = state.habits.filter(h => !h.archived);
+  const t = todayN();
+  let html = `<p class="date">${fmtDate(t, { weekday: 'long', day: 'numeric', month: 'long' })}</p>`;
+  if (!list.length) {
+    html += `<div class="empty"><div style="font-size:40px">🌱</div><p>No habits yet. Start with one of these, or tap + for your own.</p></div>
+      <div class="templates">${TEMPLATES.map((tp, i) => `<button class="tpl" data-t="${i}" style="--c:var(--${tp.color})">
+        <span class="emoji">${tp.emoji}</span><span><b>${esc(tp.name)}</b><br><span class="sub" style="font-size:13px">${describe(tp.schedule)}</span></span></button>`).join('')}</div>`;
+    view.innerHTML = html;
+    view.querySelectorAll('.tpl').forEach(b => b.onclick = () => { createHabit(TEMPLATES[+b.dataset.t]); render(); });
+    return;
+  }
+  html += '<div class="habits">';
+  for (const h of list) {
+    const a = analyze(h);
+    html += `<div class="habit" style="--c:var(--${h.color})" data-id="${h.id}">
+      <div class="top">
+        <div class="emoji">${esc(h.emoji || '•')}</div>
+        <div class="names" data-open>
+          <div class="name">${esc(h.name)}</div>
+          <div class="sched">${esc(describe(h.schedule))}</div>
+          <div class="status">${a.current ? `<span class="s">🔥 ${plural(a.current, a.unit)}</span> · ` : ''}<span class="${a.due ? '' : 'muted'}">${esc(a.status)}</span></div>
+        </div>
+        <button class="check ${a.doneToday ? 'on' : ''}" data-check aria-label="Done today">${CHECK}</button>
+      </div>
+      <div class="heatwrap" data-open></div>
+    </div>`;
+  }
+  html += '</div>';
+  view.innerHTML = html;
+  // fit as many weeks as the card is wide
+  view.querySelectorAll('.habit').forEach(card => {
+    const h = habit(card.dataset.id), wrap = card.querySelector('.heatwrap');
+    const cell = 13, gap = 3, weeks = Math.max(8, Math.floor((wrap.clientWidth + gap) / (cell + gap)));
+    wrap.innerHTML = heatHTML(h, analyze(h), weeks, cell, gap);
+    card.querySelector('[data-check]').onclick = () => { toggle(h, todayN()); renderHome(); };
+    card.querySelectorAll('[data-open]').forEach(e => e.onclick = () => { location.hash = '#/h/' + h.id; });
+  });
+}
+
+// ================================================================ detail
+let calMonth = null;
+function renderDetail(h) {
+  header(`<span style="margin-right:6px">${esc(h.emoji || '')}</span>${esc(h.name)}`, true);
+  const a = analyze(h), t = todayN();
+  if (calMonth == null || calMonth.id !== h.id) calMonth = { id: h.id, mi: monthIdx(t) };
+  const rate = (() => {
+    if (h.schedule.kind === 'gap') {
+      const span = Math.min(90, t - nKey(h.start) + 1);
+      const expected = Math.max(1, Math.ceil(span / h.schedule.n));
+      const got = a.days.filter(d => d > t - span).length;
+      return Math.min(100, Math.round(got / expected * 100));
+    }
+    return null;
+  })();
+  view.style.setProperty('--c', `var(--${h.color})`);
+  view.innerHTML = `
+    <p class="date">${esc(describe(h.schedule))} · ${esc(a.status)}</p>
+    <div class="stats">
+      <div class="stat"><b>${a.current}</b><span>current streak (${a.unit}s)</span></div>
+      <div class="stat"><b>${a.best}</b><span>best streak</span></div>
+      <div class="stat"><b>${a.total}</b><span>times total</span></div>
+      <div class="stat"><b>${rate != null ? rate + '%' : a.last30}</b><span>${rate != null ? 'on schedule, last 90 days' : 'times in last 30 days'}</span></div>
+    </div>
+    <h2>Last 12 months</h2>
+    <div class="panel"><div class="yearscroll" id="year">${heatHTML(h, a, 53, 12, 3, { months: true })}</div>
+      <div class="legend">
+        <span><i style="background:var(--c)"></i>done</span>
+        <span><i style="background:color-mix(in srgb, var(--c) var(--tint), var(--empty))"></i>on schedule</span>
+        ${h.schedule.days && h.schedule.days.length ? '<span><i style="box-shadow:inset 0 0 0 1.5px var(--c)"></i>planned</span>' : ''}
+      </div></div>
+    <h2>Log a day</h2>
+    <div class="panel" id="calpanel"></div>
+    <div class="row" style="margin-top:22px">
+      <button class="btn" id="edit">Edit</button>
+      <button class="btn" id="archive">${h.archived ? 'Unarchive' : 'Archive'}</button>
+      <button class="btn danger" id="del">Delete</button>
+    </div>`;
+  const y = $('#year'); y.scrollLeft = y.scrollWidth;
+  drawCal(h);
+  $('#edit').onclick = () => { location.hash = '#/edit/' + h.id; };
+  $('#archive').onclick = () => { h.archived = !h.archived; save(); toast(h.archived ? 'Archived — find it in settings' : 'Restored'); location.hash = '#/'; };
+  armDelete($('#del'), () => { state.habits = state.habits.filter(x => x !== h); delete state.done[h.id]; save(); location.hash = '#/'; });
+}
+function drawCal(h) {
+  const a = analyze(h), t = todayN(), mi = calMonth.mi;
+  const first = monthStart(mi), last = monthStart(mi + 1) - 1;
+  const title = new Date(first * DAY).toLocaleDateString(undefined, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  let cells = WD.map(d => `<div class="wd">${d.slice(0, 2)}</div>`).join('');
+  for (let i = 0; i < wd(first); i++) cells += '<span class="pad"></span>';
+  for (let n = first; n <= last; n++) {
+    const done = isDone(h, n);
+    let cls = done ? 'd' : a.covered.has(n) ? 'cv' : '';
+    if (!done && isPlanned(h, n)) cls += ' pl';
+    if (n === t) cls += ' td';
+    cells += `<button class="${cls}" data-n="${n}" ${n > t ? 'disabled' : ''}>${new Date(n * DAY).getUTCDate()}</button>`;
+  }
+  const p = $('#calpanel');
+  p.innerHTML = `<div class="cal-head"><button class="iconbtn" id="prevm">‹</button><b>${title}</b>
+    <button class="iconbtn" id="nextm" ${mi >= monthIdx(t) ? 'disabled style="opacity:.3"' : ''}>›</button></div>
+    <div class="cal">${cells}</div><div class="muted" style="font-size:13px;margin-top:8px">Tap a day to mark or unmark it.</div>`;
+  $('#prevm').onclick = () => { calMonth.mi--; drawCal(h); };
+  $('#nextm').onclick = () => { if (calMonth.mi < monthIdx(t)) { calMonth.mi++; drawCal(h); } };
+  p.querySelectorAll('.cal button').forEach(b => b.onclick = () => {
+    toggle(h, +b.dataset.n);
+    const y = $('#year'); const sl = y.scrollLeft;
+    renderDetail(h); $('#year').scrollLeft = sl;
+  });
+}
+function armDelete(btn, action) {
+  let armed = null;
+  btn.onclick = () => {
+    if (armed) { clearTimeout(armed); action(); return; }
+    btn.textContent = 'Tap again to delete'; btn.classList.add('armed');
+    armed = setTimeout(() => { armed = null; btn.textContent = 'Delete'; btn.classList.remove('armed'); }, 3000);
+  };
+}
+
+// ================================================================ edit / new
+const EMOJIS = ['🇯🇵', '📚', '🏋️', '🏃', '🚴', '🧘', '💧', '🥗', '🛌', '✍️', '🎸', '🧹', '💊', '🌱', '📷', '🧠'];
+function renderEdit(h) {
+  const isNew = !h;
+  const d = h ? structuredClone(h) : { id: uid(), name: '', emoji: '🌱', color: 'mauve', schedule: { kind: 'gap', n: 1 }, start: keyN(todayN()), archived: false };
+  header(isNew ? 'New habit' : 'Edit habit', true);
+  const draw = () => {
+    const s = d.schedule;
+    const mode = s.kind === 'gap' ? (s.n === 1 ? 'daily' : 'gap') : s.unit;
+    view.style.setProperty('--c', `var(--${d.color})`);
+    view.innerHTML = `
+      <div class="field"><label for="name">Name</label><input type="text" id="name" value="${esc(d.name)}" placeholder="e.g. Kettlebell" autocomplete="off"></div>
+      <div class="field"><label>Icon</label>
+        <div class="row"><input type="text" id="emoji" value="${esc(d.emoji)}" style="width:64px;text-align:center;font-size:22px" maxlength="8">
+        <span class="muted" style="font-size:13px">type any emoji, or pick one</span></div>
+        <div class="emojis">${EMOJIS.map(e => `<button data-e="${e}">${e}</button>`).join('')}</div></div>
+      <div class="field"><label>Color</label>
+        <div class="swatches">${ACCENTS.map(c => `<button data-c="${c}" title="${c}" aria-pressed="${c === d.color}" style="background:var(--${c})"></button>`).join('')}</div></div>
+      <div class="field"><label>Repeat</label>
+        <div class="seg">${[['daily', 'Daily'], ['gap', 'Every N days'], ['week', 'Weekly'], ['month', 'Monthly']]
+          .map(([k, v]) => `<button data-m="${k}" aria-pressed="${k === mode}">${v}</button>`).join('')}</div>
+        ${mode === 'gap' ? `
+          <div class="sentence">Every <input type="number" id="n" min="2" max="365" value="${s.n}"> days</div>
+          <div class="hint">The streak holds as long as there are never more than ${s.n} days between two sessions. Off days in between show as lightly tinted.</div>` : ''}
+        ${mode === 'week' || mode === 'month' ? `
+          <div class="sentence"><input type="number" id="times" min="1" max="${mode === 'week' ? 7 * s.every : 31 * s.every}" value="${s.times}">
+            time(s) every <input type="number" id="every" min="1" max="52" value="${s.every}"> ${mode}(s)</div>
+          ${mode === 'week' ? `<div class="flabel" style="margin-top:12px">On these days (optional)</div>
+            <div class="days">${WD.map((w, i) => `<button data-d="${i}" aria-pressed="${(s.days || []).includes(i)}">${w}</button>`).join('')}</div>` : ''}
+          <div class="hint" style="margin-top:10px">Each ${s.every > 1 ? s.every + '-' + mode + ' period' : mode} counts as one step of the streak once you reach the target, no matter which days.
+            ${mode === 'week' ? 'Picked days are shown as planned (outlined) in the calendar' + (s.every > 1 ? ', in the first week of each period.' : '.') : ''}</div>` : ''}
+        <p>Shows as: <span class="preview">${esc(describe(s))}</span></p>
+      </div>
+      <div class="field"><label for="start">Start date</label><input type="date" id="start" value="${d.start}" max="${keyN(todayN())}">
+        <div class="muted" style="font-size:13px;margin-top:6px">Periods of more than one week or month are counted from here.</div></div>
+      <div class="row"><button class="btn primary" id="save">${isNew ? 'Create habit' : 'Save'}</button>
+        <button class="btn" id="cancel">Cancel</button></div>`;
+    const keep = () => { d.name = $('#name').value; d.emoji = $('#emoji').value; d.start = $('#start').value || d.start; };
+    $('#name').oninput = () => { d.name = $('#name').value; };
+    $('#emoji').oninput = () => { d.emoji = $('#emoji').value; };
+    $('#start').onchange = () => { d.start = $('#start').value || d.start; };
+    view.querySelectorAll('[data-e]').forEach(b => b.onclick = () => { keep(); d.emoji = b.dataset.e; draw(); });
+    view.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { keep(); d.color = b.dataset.c; draw(); });
+    view.querySelectorAll('[data-m]').forEach(b => b.onclick = () => {
+      keep();
+      const m = b.dataset.m;
+      d.schedule = m === 'daily' ? { kind: 'gap', n: 1 } : m === 'gap' ? { kind: 'gap', n: s.kind === 'gap' && s.n > 1 ? s.n : 2 }
+        : { kind: 'period', unit: m, every: s.every || 1, times: s.times || 1, days: m === 'week' ? (s.days || []) : [] };
+      draw();
+    });
+    const num = (id, lo, hi) => Math.min(hi, Math.max(lo, parseInt($(id).value, 10) || lo));
+    if ($('#n')) $('#n').onchange = () => { keep(); s.n = num('#n', 2, 365); draw(); };
+    if ($('#every')) $('#every').onchange = () => { keep(); s.every = num('#every', 1, 52); draw(); };
+    if ($('#times')) $('#times').onchange = () => { keep(); s.times = num('#times', 1, 366); draw(); };
+    view.querySelectorAll('[data-d]').forEach(b => b.onclick = () => {
+      keep();
+      const i = +b.dataset.d, set = new Set(s.days || []);
+      set.has(i) ? set.delete(i) : set.add(i);
+      s.days = [...set].sort();
+      if (s.days.length) s.times = s.days.length;
+      draw();
+    });
+    $('#cancel').onclick = () => { location.hash = isNew ? '#/' : '#/h/' + d.id; };
+    $('#save').onclick = () => {
+      keep();
+      if (!d.name.trim()) { toast('Give it a name'); $('#name').focus(); return; }
+      d.name = d.name.trim();
+      if (isNew) state.habits.push(d); else Object.assign(h, d);
+      save();
+      location.hash = isNew ? '#/' : '#/h/' + d.id;
+    };
+  };
+  draw();
+  if (isNew) setTimeout(() => $('#name') && $('#name').focus(), 50);
+}
+
+// ================================================================ settings
+function renderSettings() {
+  header('Settings', true);
+  view.style.removeProperty('--c');
+  const flavors = [['auto', 'Auto'], ['latte', 'Latte'], ['frappe', 'Frappé'], ['macchiato', 'Macchiato'], ['mocha', 'Mocha']];
+  const active = state.habits.filter(h => !h.archived), archived = state.habits.filter(h => h.archived);
+  view.innerHTML = `
+    <h2>Theme</h2>
+    <div class="seg" id="flavor">${flavors.map(([k, v]) => `<button data-f="${k}" aria-pressed="${state.settings.flavor === k}">${v}</button>`).join('')}</div>
+    <p class="muted" style="font-size:13px">Catppuccin. Auto follows your phone: Latte by day, Mocha at night.</p>
+    ${active.length > 1 ? `<h2>Order</h2><div class="list">${active.map((h, i) => `<div class="item" style="--c:var(--${h.color})">
+      <span class="emoji" style="width:32px;height:32px;font-size:16px">${esc(h.emoji)}</span><span style="flex:1">${esc(h.name)}</span>
+      <button class="iconbtn" data-up="${h.id}" ${i === 0 ? 'disabled style="opacity:.3"' : ''}>↑</button>
+      <button class="iconbtn" data-down="${h.id}" ${i === active.length - 1 ? 'disabled style="opacity:.3"' : ''}>↓</button></div>`).join('')}</div>` : ''}
+    ${archived.length ? `<h2>Archived</h2><div class="list">${archived.map(h => `<div class="item" style="--c:var(--${h.color})">
+      <span class="emoji" style="width:32px;height:32px;font-size:16px">${esc(h.emoji)}</span><span style="flex:1">${esc(h.name)}</span>
+      <a class="btn" href="#/h/${h.id}" style="text-decoration:none">Open</a></div>`).join('')}</div>` : ''}
+    <h2>Backup</h2>
+    <div class="row"><button class="btn" id="export">Export</button><button class="btn" id="import">Import</button>
+      <input type="file" id="file" accept="application/json" class="hidden"></div>
+    <p class="muted" style="font-size:13px">Your data lives only on this device. Export now and then to keep a copy.</p>`;
+  view.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { state.settings.flavor = b.dataset.f; save(); applyFlavor(); renderSettings(); });
+  const move = (id, dir) => {
+    const act = state.habits.filter(h => !h.archived);
+    const i = act.findIndex(h => h.id === id), j = i + dir;
+    if (j < 0 || j >= act.length) return;
+    const gi = state.habits.indexOf(act[i]), gj = state.habits.indexOf(act[j]);
+    [state.habits[gi], state.habits[gj]] = [state.habits[gj], state.habits[gi]];
+    save(); renderSettings();
+  };
+  view.querySelectorAll('[data-up]').forEach(b => b.onclick = () => move(b.dataset.up, -1));
+  view.querySelectorAll('[data-down]').forEach(b => b.onclick = () => move(b.dataset.down, 1));
+  $('#export').onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: 'tsuzuku', ...state }, null, 1)], { type: 'application/json' }));
+    a.download = `tsuzuku-${keyN(todayN())}.json`; document.body.appendChild(a); a.click(); a.remove();
+  };
+  $('#import').onclick = () => $('#file').click();
+  $('#file').onchange = async e => {
+    try {
+      const d = JSON.parse(await e.target.files[0].text());
+      if (d.app !== 'tsuzuku') throw new Error('not a Tsuzuku export');
+      state = { habits: d.habits || [], done: d.done || {}, settings: d.settings || { flavor: 'auto' } };
+      save(); applyFlavor(); toast('Imported'); renderSettings();
+    } catch (err) { toast('Import failed: ' + err.message); }
+  };
+}
+
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
